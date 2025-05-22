@@ -116,15 +116,15 @@ export default function StartTypingTest() {
   return (
     <div className="min-h-screen bg-sky-100 text-black">
       <Header />
-<div className="flex flex-col md:flex-row container mx-auto p-4 md:p-6 gap-6">
+      <div className="container mx-auto p-4 md:p-6">
         {!isSubmitted ? (
-          <div className="flex gap-10">
+          <div className="flex flex-col md:flex-row gap-6">
             {/* Left Side - Passage Typing */}
-            <div className="w-[1000px] flex-col gap-6">
+            <div className="w-full md:w-2/3 flex-col gap-6">
               {/* Editable Passage */}
               <div className="relative">
                 <textarea
-                  className="w-full border bg-[#ffffff] border-gray-300 p-6 h-[450px] rounded text-lg outline-none resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono whitespace-pre-wrap leading-relaxed text-transparent caret-black"
+                  className="w-full border bg-[#ffffff] border-gray-300 p-4 md:p-6 h-[300px] md:h-[450px] rounded text-base md:text-lg outline-none resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono whitespace-pre-wrap leading-relaxed text-transparent caret-black"
                   placeholder="Start typing here..."
                   value={typedText}
                   onChange={handleTyping}
@@ -137,7 +137,7 @@ export default function StartTypingTest() {
                 {/* Highlighted text overlay */}
                 <div
                   ref={passageRef}
-                  className="absolute inset-0 p-6 pointer-events-none font-mono text-lg whitespace-pre-wrap leading-relaxed overflow-hidden"
+                  className="absolute inset-0 p-4 md:p-6 pointer-events-none font-mono text-base md:text-lg whitespace-pre-wrap leading-relaxed overflow-hidden"
                 >
                   {passage.split("").map((char, idx) => {
                     let colorClass = "text-gray-400";
@@ -167,16 +167,16 @@ export default function StartTypingTest() {
             </div>
 
             {/* Right Side - Timer + Submit */}
-            <div className="w-1/3 flex flex-col items-center justify-start gap-6">
-              <div className="w-[180px] h-[100px] border border-sky-300 rounded shadow-lg p-4 flex flex-col items-center justify-center ">
-                <MdOutlineTimer className="h-15 w-15 text-[#172F5F]" />
+            <div className="w-full md:w-1/3 flex flex-col items-center md:items-start gap-6">
+              <div className="w-full md:w-[180px] h-[100px] border border-sky-300 rounded shadow-lg p-4 flex flex-col items-center justify-center">
+                <MdOutlineTimer className="h-8 w-8 md:h-10 md:w-10 text-[#172F5F]" />
                 <p className="text-lg font-bold text-[#172F5F]">
                   {formatTime(timeLeft)}
                 </p>
               </div>
 
               <button
-                className="bg-[#172F5F] text-white py-3 px-6 rounded cursor-pointer hover:bg-blue-700 transition font-medium"
+                className="w-full md:w-auto bg-[#172F5F] text-white py-3 px-6 rounded cursor-pointer hover:bg-blue-700 transition font-medium"
                 onClick={handleSubmit}
               >
                 Submit Test
@@ -185,16 +185,15 @@ export default function StartTypingTest() {
           </div>
         ) : (
           // Results Section
-          <div className="  p-6 max-w-4xl mx-auto">
-            <div className=" bg-white w-[300px] rounded-lg overflow-hidden shadow-md items-center align-middle ml-60">
+          <div className="p-4 md:p-6 max-w-4xl mx-auto">
+            <div className="bg-white w-full md:w-[300px] mx-auto rounded-lg overflow-hidden shadow-md">
               {/* Header */}
               <div className="bg-green-400 text-white text-center py-3">
                 <h2 className="text-lg font-semibold">Result</h2>
               </div>
               {/* Main Content */}
-              <div className="  p-6 space-y-4">
+              <div className="p-4 md:p-6 space-y-4">
                 {/* WPM */}
-
                 <div className="text-center">
                   <h3 className="text-3xl font-bold text-green-600">
                     {results.wpm} WPM
@@ -204,13 +203,7 @@ export default function StartTypingTest() {
                 {/* Keystrokes */}
                 <div className="flex justify-between text-sm">
                   <span>Keystrokes</span>
-                  <span className="font-bold">
-                    {/* <span className="text-green-600">0</span> |{" "} */}
-                    <span className="text-red-600">
-                      {/* {results.keystrokes} */}
-                    </span>{" "}
-                    {results.keystrokes}
-                  </span>
+                  <span className="font-bold">{results.keystrokes}</span>
                 </div>
 
                 {/* Accuracy */}
@@ -236,9 +229,9 @@ export default function StartTypingTest() {
                 </div>
               </div>
             </div>
-            <div className="mt-8">
+            <div className="mt-6 md:mt-8">
               <h3 className="font-bold text-lg mb-3">Passage Analysis</h3>
-              <div className="border border-gray-200 p-4 rounded bg-gray-50 font-mono whitespace-pre-wrap">
+              <div className="border border-gray-200 p-3 md:p-4 rounded bg-gray-50 font-mono whitespace-pre-wrap text-sm md:text-base">
                 {passage.split("").map((char, idx) => {
                   let colorClass = "text-gray-800";
                   if (idx < typedText.length) {
