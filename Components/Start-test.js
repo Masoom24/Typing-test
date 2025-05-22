@@ -116,7 +116,7 @@ export default function StartTypingTest() {
   return (
     <div className="min-h-screen bg-sky-100 text-black">
       <Header />
-      <div className=" flex container mx-auto p-4 md:p-6">
+<div className="flex flex-col md:flex-row container mx-auto p-4 md:p-6 gap-6">
         {!isSubmitted ? (
           <div className="flex gap-10">
             {/* Left Side - Passage Typing */}
