@@ -13,7 +13,7 @@ export default function StartTypingTest() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [results, setResults] = useState(null);
   const [cursorPosition, setCursorPosition] = useState(0);
-  const passageRef = useRef(null);
+  const inputRef = useRef(null);
 
   // Calculate results
   const calculateResults = useCallback(() => {
@@ -96,10 +96,8 @@ export default function StartTypingTest() {
   const handleTyping = (e) => {
     if (isSubmitted) return;
     const value = e.target.value;
-    if (value.length <= passage.length) {
-      setTypedText(value);
-      setCursorPosition(value.length);
-    }
+    setTypedText(value);
+    setCursorPosition(value.length);
   };
 
   const handleKeyDown = (e) => {
@@ -107,10 +105,9 @@ export default function StartTypingTest() {
     setCursorPosition(e.target.selectionStart);
   };
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     if (isSubmitted) return;
-    const textarea = e.target;
-    setCursorPosition(textarea.selectionStart);
+    inputRef.current?.focus();
   };
 
   return (
@@ -119,51 +116,50 @@ export default function StartTypingTest() {
       <div className="container mx-auto p-4 md:p-6">
         {!isSubmitted ? (
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Left Side - Passage Typing */}
-            <div className="w-full md:w-2/3 flex-col gap-6">
-              {/* Editable Passage */}
-              <div className="relative">
-                <textarea
-                  className="w-full border bg-[#ffffff] border-gray-300 p-4 md:p-6 h-[300px] md:h-[450px] rounded text-base md:text-lg outline-none resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono whitespace-pre-wrap leading-relaxed text-transparent caret-black"
-                  placeholder="Start typing here..."
-                  value={typedText}
-                  onChange={handleTyping}
-                  onKeyDown={handleKeyDown}
-                  onClick={handleClick}
-                  spellCheck={false}
-                  autoFocus
-                />
+            {/* Left Side - Passage Display and Input */}
+            <div className="w-full md:w-2/3 flex flex-col gap-6">
+              {/* Passage Display */}
+              <div
+                className="w-full border bg-white border-gray-300 p-4 md:p-6 h-[300px] md:h-[400px] rounded text-base md:text-lg font-mono whitespace-pre-wrap leading-relaxed overflow-y-auto"
+                onClick={handleClick}
+              >
+                {passage.split("").map((char, idx) => {
+                  let colorClass = "text-gray-800";
+                  if (idx < typedText.length) {
+                    colorClass =
+                      typedText[idx] === char
+                        ? "text-green-600"
+                        : "text-red-600";
+                  }
+                  const isCursorPos =
+                    idx === cursorPosition &&
+                    document.activeElement === inputRef.current;
+                  const bgClass = isCursorPos ? "bg-blue-200" : "";
 
-                {/* Highlighted text overlay */}
-                <div
-                  ref={passageRef}
-                  className="absolute inset-0 p-4 md:p-6 pointer-events-none font-mono text-base md:text-lg whitespace-pre-wrap leading-relaxed overflow-hidden"
-                >
-                  {passage.split("").map((char, idx) => {
-                    let colorClass = "text-gray-400";
-                    if (idx < typedText.length) {
-                      colorClass =
-                        typedText[idx] === char
-                          ? "text-green-600"
-                          : "text-red-600";
-                    }
-
-                    const isCursorPos = idx === cursorPosition;
-                    const bgClass = isCursorPos ? "bg-blue-200" : "";
-
-                    return (
-                      <span
-                        key={idx}
-                        className={`${colorClass} ${bgClass} ${
-                          char === " " ? "underline" : ""
-                        }`}
-                      >
-                        {char}
-                      </span>
-                    );
-                  })}
-                </div>
+                  return (
+                    <span
+                      key={idx}
+                      className={`${colorClass} ${bgClass} ${
+                        char === " " ? "underline" : ""
+                      }`}
+                    >
+                      {char}
+                    </span>
+                  );
+                })}
               </div>
+
+              {/* Input Box */}
+              <textarea
+                ref={inputRef}
+                className="w-full border bg-white  border-gray-300 p-4 rounded text-base md:text-lg outline-none resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono"
+                placeholder="Type the passage here..."
+                value={typedText}
+                onChange={handleTyping}
+                onKeyDown={handleKeyDown}
+                spellCheck={false}
+                autoFocus
+              />
             </div>
 
             {/* Right Side - Timer + Submit */}
